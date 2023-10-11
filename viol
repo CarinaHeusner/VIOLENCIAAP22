@@ -1,0 +1,105 @@
+# ELABORAÇÃO: CARINA HEUSNER GONÇALVES DE SOUSA - CRBM: 48450 
+# DATA DA ELABORAÇÃO: 11/10/2023
+# ELABORADO DURANTE O ESTÁGIO OPTATIVO NA CAP 2.2, PARTE DA RESIDÊNCIA EM SAÚDE COLETIVA (IESC/UFRJ) 
+
+#############################################################################################
+# ANÁLISE DO BANCO DE VIOLÊNCIA, PERÍODO JAN A SET 23 - EXTRAIDO DO SINAN NET EM 10/10/2023 #
+#############################################################################################
+
+
+# Passo 1: Escolher diretório: Selecionar o diretório de trabalho (working directory):
+# Manualmente: Session > Set Working Directory >  Choose Directory
+# Esse passo é para escolher a PASTA em que se encontra o arquivo no pc, no entanto, não vai aparecer o arquivo do banco quando fizer isso!!
+
+# Passo 2: Instalar pacotes e chamar as bibliotecas:
+# Instalar: Na aba a direita inferior, va em Packages >> Install >> escreve nome do pacote e clicar em install
+
+
+library(rio)  # permite importar bases de dados
+library (readxl)# permite ler excel
+library(tidyr) # permite trocar o NA por alguma categoria
+library(ggplot2) # graficos
+library(gtsummary) # tabelas
+library(gt) # tabelas
+library(janitor) # limpa bases de dados
+library (tidyverse)# transorma e apresenta melhor os dados
+library (lubridate)
+
+
+# Passo 3: Carregar banco de dados
+dados <- import(choose.files())
+
+# Passo 4: Excluir colunas que não são de interesse de análise
+# Tem dois possíveis comandos:
+
+#dados <- subset(dados, select =c(ENTRADA, DATINVEST, DATNASC, DATPRISMIN, ABAND, BAIRRO, MUNICIPIO)) %>% filter(ANALITIC == "1")
+
+dados <- dados %>% select(DATNOTIF, DATNASC, SEXO, RACACOR, IDENTIC, DATNOTIF, 
+                          ESCOLA, TIPOENT, FORMTUB, TUBAIDS, TUBALCOOL, TUBDIAB,
+                          TUBDMENT, TUBOUTRAS, TUBAGRQUAIS, TUBSAIDA)
+
+# Passo 5: Verificar a classicação de cada variavel
+sapply(dados, FUN="typeof")
+
+# Passo 6: Reclassificar as variáveis
+dados <- dados %>%  mutate(DT_NOTIFIC = as.Date(DATNOTIF, format = "%Y-%m-%d"),
+                           NU_IDADE_N = as.number(NU_IDADE_N),
+                           CS_SEXO = as.factor(CS_SEXO),
+                           CS_RACACOR = as.factor(CS_RACACOR),
+                           CS_ESCOL_N = as.factor(CS_ESCOL_N),
+                           OUT_VEZES = as.factor(OUT_VEZES),
+                           LES_AUTOP = as.facotr(LES_AUTOP),
+                           VIOL_FISIC = as.factor(VIOL_FISIC),
+                           VIOL_PSICO = as.factor(VIOL_PSICO),
+                           VIOL_TORT = as.factor(VIOL_TORT),
+                           VIOL_SEXU = as.factor(VIOL_SEXU),
+                           VIOL_TRAF	= as.factor
+                           VIOL_FINAN	= as.factor
+                           VIOL_NEGLI	= as.factor
+                           VIOL_INFAN	= as.factor
+                           VIOL_LEGAL	= as.factor
+                           VIOL_OUTR = as.factor
+                           VIOL_ESPEC = as.factor
+                           AG_FORCA	= as.factor
+                           AG_ENFOR	= as.factor
+                           AG_OBJETO = as.factor
+                           AG_CORTE	= as.factor
+                           AG_QUENTE = as.factor
+                           AG_ENVEN = as.factor
+                           AG_FOGO = as.factor
+                           AG_AMEACA = as.factor
+                           AG_OUTROS = as.factor
+                           AG_ESPEC = as.factor
+                           CIRC_LESAO
+
+                           
+                           
+
+# Passo 7: Recodificar as variáveis
+
+# Olhar como estão as respostas de cada variável para poder recodificar
+glimpse(dados)
+
+dados <- dados %>%  mutate(SEXO = recode(SEXO,
+                                         "M" = "MASCULINO",
+                                         "F" = "FEMININO"),
+                           RACACOR = recode (RACACOR,
+                                             "1" = "BRANCA",
+                                             "2" = "PRETA",
+                                             "3" = "AMARELA",
+                                             "4" = "PARDA",
+                                             "9" = "IGNORADO"),
+                           ESCOLA = recode (ESCOLA,
+                                            "0" = "ANALFABETO",
+                                            "1" = "ENSINO FUNDAMENTAL INCOMPLETO",
+                                            "2" = "ENSINO FUNDAMENTAL INCOMPLETO",
+                                            "3" = "ENSINO FUNDAMENTAL INCOMPLETO",
+                                            "4" = "ENSINO FUNDAMENTAL COMPLETO",
+                                            "5" = "ENSINO MEDIO INCOMPLETO",
+                                            "6" = "ENSINO MEDIO COMPLETO",
+                                            "7" = "ENSINO SUPERIOR INCOMPLETO",
+                                            "8" = "ENSINO SUPERIOR COMPLETO",
+                                            "9" = "IGNORADO",
+                                            "10" = "NAO SE APLICA"),
+                           CIRC_LESAO = recorde (CIRC_LESAO, 
+                                                  
