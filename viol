@@ -1,10 +1,13 @@
 # ELABORAÇÃO: CARINA HEUSNER GONÇALVES DE SOUSA - CRBM: 48450 
 # DATA DA ELABORAÇÃO: 11/10/2023
-# ELABORADO DURANTE O ESTÁGIO OPTATIVO NA CAP 2.2, PARTE DA RESIDÊNCIA EM SAÚDE COLETIVA (IESC/UFRJ) 
+# LOCAL DA ELBORAÇÃO: ESTÁGIO OPTATIVO CAP 2.2, PARTE DA RESIDÊNCIA EM SAÚDE COLETIVA (IESC/UFRJ) 
 
-#############################################################################################
-# ANÁLISE DO BANCO DE VIOLÊNCIA, PERÍODO JAN A SET 23 - EXTRAIDO DO SINAN NET EM 10/10/2023 #
-#############################################################################################
+##########################################
+# ANÁLISE DE BANCO DE SINAN DA VIOLÊNCIA #
+##########################################
+
+#BANCO EXTRAÍDO EM: 10/10/2023 
+#PERÍODO DA EXTRAÇÃO: JANEIRO A SETEMBRO DE 2023 
 
 
 # Passo 1: Escolher diretório: Selecionar o diretório de trabalho (working directory):
@@ -32,11 +35,14 @@ dados <- import(choose.files())
 # Passo 4: Excluir colunas que não são de interesse de análise
 # Tem dois possíveis comandos:
 
-#dados <- subset(dados, select =c(ENTRADA, DATINVEST, DATNASC, DATPRISMIN, ABAND, BAIRRO, MUNICIPIO)) %>% filter(ANALITIC == "1")
-
-dados <- dados %>% select(DATNOTIF, DATNASC, SEXO, RACACOR, IDENTIC, DATNOTIF, 
-                          ESCOLA, TIPOENT, FORMTUB, TUBAIDS, TUBALCOOL, TUBDIAB,
-                          TUBDMENT, TUBOUTRAS, TUBAGRQUAIS, TUBSAIDA)
+#dados <- subset(dados, select =c(UNIDADE_SEG, DT_NOTIFIC, DT_NASC, CS_SEXO, CS_GESTANT, CS_RACA, CS_ESCOL_N, SIT_CONJUG, 
+                                  DEF_TRANSF, DEF_FISICA, DEF_MENTAL, DEF_VISUAL, DEF_AUDITI, TRAN_MENTAL, TRAN_COMP, DEF_OUT, 
+                                  DEF_ESPEC, LOCAL_OCOR, OUT_VEZES, LES_AUTOP, VIOL_FISIC, VIOL_PSICO, VIOL_TRAF, VIOL_FINAN, 
+                                  VIOL_NEGLI, VIOL_INFAN, VIOL_LEGAL, VIOL_OUTR, VIOL_ESPEC, AG_FORCA, AG_ENFOR, AG_AG_OBJETO, 
+                                  AG_CORTE, AG_QUENTE, AG_ENVEN, AG_FOGO, AG_AMEACA, AG_OUTROS, SEX_ASSEDI, SEX_ESTUPR, SEX_PUDOR, 
+                                  SEX_PORNO, SEXO_EXPLO, SEXO_OUTRO, REL_PAI, REL_MAE, REL_PAD, REL_MAD, REL_CONJ, REL_EXCON, REL_NAMO, 
+                                  REL_EXNAM, REL_FILHO, REL_IRMÃO, REL_CONHEC, REL_CUIDA, REL_PATRAO,	REL_INST,	REL_POL,	REL_PROPRI,	
+                                  REL_OUTROS, REL_ESPEC, AUTOR_SEXO, AUTOR_ALCO, CICLO_VID, CIRC_LESAO)) %>% filter(ANALITIC == "1")
 
 # Passo 5: Verificar a classicação de cada variavel
 sapply(dados, FUN="typeof")
@@ -76,30 +82,102 @@ dados <- dados %>%  mutate(DT_NOTIFIC = as.Date(DATNOTIF, format = "%Y-%m-%d"),
                            
 
 # Passo 7: Recodificar as variáveis
-
 # Olhar como estão as respostas de cada variável para poder recodificar
 glimpse(dados)
 
-dados <- dados %>%  mutate(SEXO = recode(SEXO,
-                                         "M" = "MASCULINO",
-                                         "F" = "FEMININO"),
-                           RACACOR = recode (RACACOR,
+dados <- dados %>%  mutate(CS_SEXO = recode(SEXO,
+                                         "M" = "Masculino",
+                                         "F" = "Feminino"),
+                          (CS_GESTANT = recode(CS_GESTANT,
+                                              "1" = "1º Trimestre"
+                                              "2" = "2º Trimestre"
+                                              "3" = "3º Trimestre"
+                                              "4" = "Idade gestacional ignorada"
+                                              "5" = "Não"
+                                              "6" = "Não se aplica"
+                                              "9" = "Ignorado"),
+                           CS_RACA = recode (CS_RACA,
                                              "1" = "BRANCA",
                                              "2" = "PRETA",
                                              "3" = "AMARELA",
                                              "4" = "PARDA",
+                                             "5" = "INDÍGENA",
                                              "9" = "IGNORADO"),
-                           ESCOLA = recode (ESCOLA,
-                                            "0" = "ANALFABETO",
-                                            "1" = "ENSINO FUNDAMENTAL INCOMPLETO",
-                                            "2" = "ENSINO FUNDAMENTAL INCOMPLETO",
-                                            "3" = "ENSINO FUNDAMENTAL INCOMPLETO",
-                                            "4" = "ENSINO FUNDAMENTAL COMPLETO",
-                                            "5" = "ENSINO MEDIO INCOMPLETO",
-                                            "6" = "ENSINO MEDIO COMPLETO",
-                                            "7" = "ENSINO SUPERIOR INCOMPLETO",
-                                            "8" = "ENSINO SUPERIOR COMPLETO",
-                                            "9" = "IGNORADO",
-                                            "10" = "NAO SE APLICA"),
+                           CS_ESCOL_N = recode (CS_ESCOL_N,
+                                              "0" = "ANALFABETO",
+                                              "1" = "ENSINO FUNDAMENTAL INCOMPLETO",
+                                              "2" = "ENSINO FUNDAMENTAL INCOMPLETO",
+                                              "3" = "ENSINO FUNDAMENTAL INCOMPLETO",
+                                              "4" = "ENSINO FUNDAMENTAL COMPLETO",
+                                              "5" = "ENSINO MEDIO INCOMPLETO",
+                                              "6" = "ENSINO MEDIO COMPLETO",
+                                              "7" = "ENSINO SUPERIOR INCOMPLETO",
+                                              "8" = "ENSINO SUPERIOR COMPLETO",
+                                              "9" = "IGNORADO",
+                                              "10" = "NAO SE APLICA"),
+                          SIT_CONJUG = recorde(SIT_CONJUG, 
+                                                "1" = "SOLTEIRO",
+                                                "2" = "CASADO/UNIÃO CONSENSUAL",
+                                                "3" = "VIÚVO",
+                                                "4" = "SEPARADO",
+                                                "8" = "NÃO SE APLICA"),
+                           DEF_TRANS = recorde(DEF_TRNS,
+                                                "1" = "SIM",
+                                                "2" = "NÃO",
+
+                                                "9" = "IGNORADO"),
+                            DEF_FISICA = recorde(DEF_FISICA,
+                                                "1" = "SIM",
+                                                "2" = "NÃO",
+                                                "9" = "IGNORADO"),
+                            DEF_MENTAL = recorde(DEF_MENTAL,
+                                                "1" = "SIM",
+                                                "2" = "NÃO",
+                                                "9" = "IGNORADO"),
+                            DEF_VISUAL = recorde(DEF_VISUAL,
+                                                "1" = "SIM",
+                                                "2" = "NÃO",
+                                                "9" = "IGNORADO"),
+                            DEF_AUDITI = recorde(DEF_AUDITI,
+                                                "1" = "SIM",
+                                                "2" = "NÃO",
+                                                "9" = "IGNORADO"),
+                            TRAN_MENTAL = recorde(TRAN_MENTAL,
+                                                "1" = "SIM",
+                                                "2" = "NÃO",
+                                                "9" = "IGNORADO"),
+                            TRAN_COMP = recorde(TRAN_COMP,
+                                                "1" = "SIM",
+                                                "2" = "NÃO",
+                                                "9" = "IGNORADO"),
+                            LOCAL_OCOR = recorde(LOCAL_OCOR,
+                                                "01" = "RESIDÊNCIA",
+                                                "02" = "HABITAÇÃO COLETIVA",
+                                                "03" = "ESCOLA",
+                                                "04" = "LOCAL DE PRÁTICA ESPORTIVA",
+                                                "05" = BAR OU SIMILAR
+                                                "06" = VIA PUBLICA,
+                                                "07" = "COMÉRCIO/SERVIÇO",
+                                                "08" = "INDUSTRIAS/CONSTRUÇÃO",
+                                                "09" = "OUTRO",
+                                                "99" = "IGNORADO"),
+
                            CIRC_LESAO = recorde (CIRC_LESAO, 
                                                   
+# Passo 8: Criar idade e faixa etária
+dados <- dados %>% mutate(IDADE = DT_NOTIFIC - DT_NASC)
+                           
+class(dados$IDADE)
+dados <- dados %>% mutate(IDADE = as.numeric(IDADE))                        
+                    
+dados <- dados %>% mutate(IDADE.anos = IDADE/365.25 )
+
+summary(dados$IDADE.anos)
+boxplot(dados$IDADE.anos)
+
+dados <- dados %>% mutate("FX_ETARIA" = cut(IDADE.anos,
+                                             breaks = c(12,20,40, 60, Inf),
+                                             right = FALSE,
+                                             labels = c("12 a 19", "20 a 39", "40 a 59", 
+                                                        "60 ou mais")))
+
