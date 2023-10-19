@@ -91,12 +91,12 @@ dados <- dados %>%  mutate(CS_SEXO = recode(SEXO,
                                          "M" = "Masculino",
                                          "F" = "Feminino"),
                           CS_GESTANT = recode(CS_GESTANT,
-                                              "1" = "1º Trimestre"
-                                              "2" = "2º Trimestre"
-                                              "3" = "3º Trimestre"
-                                              "4" = "Idade gestacional ignorada"
-                                              "5" = "Não"
-                                              "6" = "Não se aplica"
+                                              "1" = "1º Trimestre",
+                                              "2" = "2º Trimestre",
+                                              "3" = "3º Trimestre",
+                                              "4" = "Idade gestacional ignorada",
+                                              "5" = "Não",
+                                              "6" = "Não se aplica",
                                               "9" = "Ignorado"),
                            CS_RACA = recode (CS_RACA,
                                              "1" = "BRANCA",
@@ -127,37 +127,37 @@ dados <- dados %>%  mutate(CS_SEXO = recode(SEXO,
                            DEF_TRANS = recorde(DEF_TRNS,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             DEF_FISICA = recorde(DEF_FISICA,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             DEF_MENTAL = recorde(DEF_MENTAL,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             DEF_VISUAL = recorde(DEF_VISUAL,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             DEF_AUDITI = recorde(DEF_AUDITI,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             TRAN_MENTAL = recorde(TRAN_MENTAL,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             TRAN_COMP = recorde(TRAN_COMP,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             LOCAL_OCOR = recorde(LOCAL_OCOR,
                                                 "01" = "RESIDÊNCIA",
@@ -257,32 +257,32 @@ dados <- dados %>%  mutate(CS_SEXO = recode(SEXO,
                             SEX_ASSEDI = recorde(SEX_ASSEDI,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             SEX_ESTUPR = recorde(SEX_ESTUPR,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             SEX_PUDOR = recorde(SEX_PUDOR,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             SEX_PORNO = recorde(SEX_PORNO,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             SEX_EXPLO = recorde(SEX_EXPLO,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             SEX_OUTRO = recorde(SEX_OUTRO,
                                                 "1" = "SIM",
                                                 "2" = "NÃO",
-                                                "8" = "NÃO SE APLICA"
+                                                "8" = "NÃO SE APLICA",
                                                 "9" = "IGNORADO"),
                             REL_PAI = recorde(REL_PAI,
                                                 "1" = "SIM",
@@ -461,10 +461,36 @@ class(dados$IDADE)
 summary(dados$IDADE.anos)
 boxplot(dados$IDADE.anos)
 
-# Passo 9: Criar faixa etária
+# Passo 9: Criar faixa etária (seguindo a mesma faixa etária da variável "Ciclo de vida do provável autor", de acordo com a ficha de notificação)
 #dados <- dados %>% mutate("FX_ETARIA" = cut(IDADE.anos,
-                                             breaks = c(12,20,40, 60, Inf),
+                                             breaks = c(0,10,20, 25, 60, Inf),
                                              right = FALSE,
-                                             labels = c("12 a 19", "20 a 39", "40 a 59", 
-                                                        "60 ou mais")))
+                                             labels = c("CRIANÇA", "ADOLESCENTE", "JOVEM", 
+                                                        "ADULTO", "IDOSO")))
+                                             #labels = c("0 a 9", "10 a 19", "20 a 24", 
+                                                        "25 a 59", "a partir de 60")))
+
+
+# Passo 10: Criar nova variável para agrupar os tipos de violência do campo aberto 
+glimpse(dados)
+table(dados$VIOL_ESPEC)
+
+dados$TIPO_VIOL <- NULL 
+
+dados$TIPO_VIOL <- ifelse(dados$VIOL_ESPEC == "AMEAÇA", "AMEAÇA", 
+                     ifelse(dados$VIOL_ESPEC == "BULLYING" | dados$VIOL_ESPEC== "BULLYING", "BULLING",
+                       ifelse(dados$VIOL_ESPEC == "AUTO LESÃO" | dados$VIOL_ESPEC== "AUTO LESAO", "AUTO LESÃO", "AUTO-LESÕES", "AUTOPROVOCASA",
+                         ifelse(dados$VIOL_ESPEC  == "AUTOMUTILAÇÃO" | dados$VIOL_ESPEC== "AUTOMUTILAÇÃO" , "AUTO MUTILAÇAO", "AUTOMUTILACAO", 
+                           ifelse(dados$VIOL_ESPEC  == "TENTATIVA DE SUICÍDIO" | dados$VIOL_ESPEC== "TENTATIVA DE SUICÍDIO" , "TENTATIVA DE SUICIDIO", "TENTATIVA E SUICIDIO", 
+                                                                                                    "TENTATIVA SUICIDIO", "TENTATTIVA DE SUICIDIO", "TENT SUICIDIO", "SUICIDIO", "TS", 
+                                                                                                     "AUTOATENTATIVA DE SUICIDIO", "AUTO-SUICIDIO", "TENTATIVA DE AUTOEXTERMINIO")))))
+
+
+DEFICIT DE AUTO CUIDADO
+INTOXIÇÃO EXOGENA
+PATRIMONIAL
+VERBAL
+
+
+
 
